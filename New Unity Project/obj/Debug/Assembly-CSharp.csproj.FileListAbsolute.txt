@@ -1,0 +1,2 @@
+D:\darkn\School\UNCC\2018-19\AI in Computer Games\GitHub Game Folder\ITCS-4236-Game\New Unity Project\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+D:\darkn\School\UNCC\2018-19\AI in Computer Games\GitHub Game Folder\ITCS-4236-Game\New Unity Project\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
