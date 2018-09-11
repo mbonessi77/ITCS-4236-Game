@@ -23,14 +23,19 @@ public class RollMovement : MonoBehaviour
         //create/update steering values
         float steerRotation = Input.GetAxis("Horizontal") * steerForce;
 
+        //store speed
+        currentSpeed = rb.velocity.magnitude;
+
         //apply steering
         if (currentSpeed > 10f)
         {
+            //if going faster that 10 turning angle is reduced
             frWheel.steerAngle = steerRotation * (10 / currentSpeed);
             flWheel.steerAngle = steerRotation * (10 / currentSpeed);
         }
         else
         {
+            //else going slow enough for full turning angles
             frWheel.steerAngle = steerRotation;
             flWheel.steerAngle = steerRotation;
         }
@@ -39,6 +44,7 @@ public class RollMovement : MonoBehaviour
     void FixedUpdate()
     {
         /*
+        //For speeds??????
         float wheelRadius = brWheel.radius;
         float wheelRPM = brWheel.rpm;
         float circumference; //here we will store the circumference
@@ -48,11 +54,20 @@ public class RollMovement : MonoBehaviour
         speedInMph = ((circumference * wheelRPM) * 60) * 0.62f; // finding mph
         */
 
-        //create/update acceleration values
-        float acceleration = Input.GetAxis("Vertical") * motorForce;
+        //create acceleration values
+        float acceleration;
 
-        //store speed
-        currentSpeed = rb.velocity.magnitude;
+        //update acceleration values
+        if (currentSpeed > (topSpeed * 0.60f))
+        {
+            //if car is currently going faster the 3/5 of top speed reduce the amount of motor force added
+            acceleration = Input.GetAxis("Vertical") * (motorForce * 0.5f);
+        }
+        else
+        {
+            //else car is going less than 3/5 of top speed allow full amount of motor force to be added
+            acceleration = Input.GetAxis("Vertical") * motorForce;//JUST THIS IF WANT TO REVERT TO PREVIOUS VERSION
+        }
 
         //apply acceleration
         if (currentSpeed < topSpeed)
@@ -85,6 +100,6 @@ public class RollMovement : MonoBehaviour
             blWheel.brakeTorque = 0;
         }
 
-        //print(frWheel.steerAngle);
+        print(acceleration);
     }
 }
