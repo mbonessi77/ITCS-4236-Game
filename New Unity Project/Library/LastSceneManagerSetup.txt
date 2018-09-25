@@ -1,4 +1,12 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Rockford/Scenes/CartoonMovementWork.unity
+=======
+<<<<<<< HEAD
+- path: Assets/Michael/Scenes/Michael Level.unity
+=======
+- path: Assets/Walker/Scenes/CamWork.unity
+>>>>>>> aa0f70f1f27a90f454bc8db7a6836fb85e6eb2fb
+>>>>>>> b8af07f0a61455a98c6162249f20a640d039ab3f
   isLoaded: 1
   isActive: 1
