@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Rockford/Scenes/CamWork.unity
+- path: Assets/Walker/Scenes/CamWork.unity
   isLoaded: 1
   isActive: 1
