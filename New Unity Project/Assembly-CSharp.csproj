@@ -66,6 +66,9 @@
     <Compile Include="Assets\Rockford\Scripts\CameraControl.cs" />
     <Compile Include="Assets\Rockford\Scripts\emptyObjectFollow.cs" />
     <Compile Include="Assets\Rockford\Scripts\RollMovement.cs" />
+    <Compile Include="Assets\Walker\Scripts\CameraControl2.cs" />
+    <Compile Include="Assets\Walker\Scripts\emptyObjectFollow2.cs" />
+    <Compile Include="Assets\Walker\Scripts\RollMovement2.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/Game Project/ITCS-4236-Game/New Unity Project/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>

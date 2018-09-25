@@ -1,4 +1,8 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Michael/Scenes/Michael Level.unity
+=======
+- path: Assets/Walker/Scenes/CamWork.unity
+>>>>>>> aa0f70f1f27a90f454bc8db7a6836fb85e6eb2fb
   isLoaded: 1
   isActive: 1
