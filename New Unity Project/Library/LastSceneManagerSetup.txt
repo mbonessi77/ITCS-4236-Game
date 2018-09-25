@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Rockford/Scenes/CamWork.unity
+- path: Assets/Rockford/Scenes/CartoonMovementWork.unity
   isLoaded: 1
   isActive: 1
