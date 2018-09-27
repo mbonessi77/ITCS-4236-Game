@@ -1,6 +1,10 @@
 sceneSetups:
 <<<<<<< HEAD
+<<<<<<< HEAD
 - path: Assets/Walker/Scenes/AI Testing.unity
+=======
+- path: Assets/Rockford/Scenes/CartoonMovementWork.unity
+>>>>>>> 882311a2df62d6ef4640f737c48da8f84c0420d1
 =======
 - path: Assets/Rockford/Scenes/CartoonMovementWork.unity
 >>>>>>> 882311a2df62d6ef4640f737c48da8f84c0420d1
