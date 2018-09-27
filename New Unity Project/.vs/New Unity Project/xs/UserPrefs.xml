@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Walker/Scripts/CameraControl2.cs">
     <Files>
-      <File FileName="Assets/Walker/Scripts/CameraControl2.cs" Line="3" Column="28" />
+      <File FileName="Assets/Walker/Scripts/CameraControl2.cs" Line="41" Column="39" />
       <File FileName="Assets/Walker/Scripts/emptyObjectFollow2.cs" Line="5" Column="32" />
       <File FileName="Assets/Walker/Scripts/RollMovement2.cs" Line="5" Column="27" />
     </Files>

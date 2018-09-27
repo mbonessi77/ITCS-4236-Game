@@ -30,7 +30,7 @@ public class CameraControl : MonoBehaviour
         // Moves the camera to match the car's position.
         cameraControl.position = Vector3.Lerp(cameraControl.position, car.position, cameraStickiness * Time.fixedDeltaTime);
 
-        // If the car isn't moving, default to looking forwards. Prevents camera from freaking out with a zero velocity getting put into a Quaternion.LookRotation
+        // If the car isn't moving/accelerating, default to looking forwards. Prevents camera from freaking out with a zero velocity getting put into a Quaternion.LookRotation
         if (carPhysics.velocity.magnitude < rotationThreshold)
             look = Quaternion.LookRotation(car.forward);
         else

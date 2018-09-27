@@ -1,4 +1,8 @@
 sceneSetups:
-- path: Assets/Walker/Scenes/CamWork.unity
+<<<<<<< HEAD
+- path: Assets/Walker/Scenes/AI Testing.unity
+=======
+- path: Assets/Rockford/Scenes/CartoonMovementWork.unity
+>>>>>>> 882311a2df62d6ef4640f737c48da8f84c0420d1
   isLoaded: 1
   isActive: 1
