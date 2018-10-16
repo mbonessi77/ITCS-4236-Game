@@ -9,13 +9,17 @@ public class CartoonMovement : MonoBehaviour
     /// </summary>
 
     [SerializeField]
-    private float topSpeed, steer, brake;
-    private float currentSpeed, acceleration;
+    private float topSpeed, brake;
+    private float currentSpeed, steer;
+    [HideInInspector]
+    public float acceleration;
     private Vector3 localVelocity;
     [SerializeField]
     private Rigidbody rb;
     [SerializeField]
     private Transform trans;
+    [HideInInspector]
+    public bool isGrounded;
 
     void Start()
     {
@@ -81,6 +85,20 @@ public class CartoonMovement : MonoBehaviour
             }
         }
 
+        //set turn ability based on speed
+        if(acceleration > (topSpeed * 0.75f))
+        {
+            steer = 0.75f;
+        }
+        else if(acceleration > (topSpeed * 0.5f))
+        {
+            steer = 0.87f;
+        }
+        else
+        {
+            steer = 1f;
+        }
+
         //create variable to track speed and direction in the .z portion of the Vector3
         localVelocity = rb.transform.InverseTransformDirection(rb.velocity);
 
@@ -94,7 +112,7 @@ public class CartoonMovement : MonoBehaviour
 
         //if not currently going max speed
         //update acceleration values/accelerate
-        if (currentSpeed < topSpeed)
+        if (currentSpeed < topSpeed && isGrounded)
         {
             //normalize vector to get just the direction
             towards.Normalize();
@@ -102,6 +120,10 @@ public class CartoonMovement : MonoBehaviour
 
             //move the leader
             rb.velocity = towards;
+        }
+        else if(!isGrounded)
+        {
+            rb.velocity *= 0.9f;
         }
 
         //create acceleration values
@@ -120,18 +142,5 @@ public class CartoonMovement : MonoBehaviour
 
         //rotate car to desired steering position
         trans.rotation = Quaternion.Lerp(trans.rotation, targetRotation, steer * Time.deltaTime);
-    }
-
-    //BUGGY!!!!!!!!!!!!!!!!!!!
-    void OnCollisionStay(Collision other)
-    {
-        //if colliding with something other than the ground
-        if(other.transform.tag != "Ground")
-        {
-            if (Mathf.Abs(acceleration) > Mathf.Abs(localVelocity.z))
-            {
-                acceleration = localVelocity.z;
-            }
-        }
     }
 }
