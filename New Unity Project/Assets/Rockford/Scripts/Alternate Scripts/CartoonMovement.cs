@@ -9,7 +9,7 @@ public class CartoonMovement : MonoBehaviour
     /// </summary>
 
     [SerializeField]
-    private float topSpeed, brake;
+    private float topSpeed, topAcceleration;
     private float currentSpeed, steer;
     [HideInInspector]
     public float acceleration;
@@ -32,28 +32,28 @@ public class CartoonMovement : MonoBehaviour
         currentSpeed = rb.velocity.magnitude;
 
         //determine correct acceleration value
-        //if accelerating forwards
-        if (Input.GetAxis("Vertical") > 0.2f)
+        //if accelerating forwards and on ground
+        if (Input.GetAxis("Vertical") > 0.2f && isGrounded)
         {
             //if going forwards and not at top speed, speed up forwards
-            if (acceleration < topSpeed)
+            if (acceleration < topAcceleration)
             {
                 acceleration += 0.2f;
             }
         }
-        else if (Input.GetAxis("Vertical") < -0.2f)
+        else if (Input.GetAxis("Vertical") < -0.2f && isGrounded)
         {
-            //else if accelerating backwards
+            //else if accelerating backwards and on ground
 
             //if going backwards and not at half of top speed in reverse, speed up backwards
-            if (acceleration > -(topSpeed * 0.5f))
+            if (acceleration > -(topAcceleration * 0.5f))
             {
                 acceleration -= 0.2f;
             }
         }
         else
         {
-            //else not accelerating
+            //else not accelerating and/or not on ground
 
             //if not accelerating forwards or backwards and speed is above zero, slow down forward movement
             if (acceleration > 0.1f)
@@ -86,23 +86,23 @@ public class CartoonMovement : MonoBehaviour
         }
 
         //set turn ability based on speed
-        if(acceleration > (topSpeed * 0.75f))
+        if(currentSpeed > (topSpeed * 0.66f))
         {
             steer = 0.75f;
         }
-        else if(acceleration > (topSpeed * 0.5f))
-        {
-            steer = 0.87f;
-        }
-        else
+        else if(currentSpeed > (topSpeed * 0.33f))
         {
             steer = 1f;
         }
+        else
+        {
+            steer = 1.25f;
+        }
 
-        //create variable to track speed and direction in the .z portion of the Vector3
+        //create variable to track speed and direction in the .z portion of the Vector3 [UNUSED!!!]
         localVelocity = rb.transform.InverseTransformDirection(rb.velocity);
 
-        //print(acceleration);
+        //print(currentSpeed);
     }
 
     void FixedUpdate()
@@ -111,14 +111,14 @@ public class CartoonMovement : MonoBehaviour
         Vector3 towards = trans.forward;
 
         //if not currently going max speed
-        //update acceleration values/accelerate
+        //update velocity values/accelerate
         if (currentSpeed < topSpeed && isGrounded)
         {
             //normalize vector to get just the direction
             towards.Normalize();
             towards *= acceleration;
 
-            //move the leader
+            //move car
             rb.velocity = towards;
         }
         else if(!isGrounded)
@@ -126,21 +126,21 @@ public class CartoonMovement : MonoBehaviour
             rb.velocity *= 0.9f;
         }
 
-        //create acceleration values
+        //create target rotation variable
         Quaternion targetRotation = Quaternion.LookRotation(trans.forward);
 
-        //if steering right
-        if (Input.GetAxis("Horizontal") > 0.1f)
+        //if steering right and moving
+        if (Input.GetAxis("Horizontal") > 0.1f && Mathf.Abs(currentSpeed) > 1f)
         {
             targetRotation = Quaternion.LookRotation(trans.forward + (trans.forward + trans.right));
         }
-        else if (Input.GetAxis("Horizontal") < -0.1f)
+        else if (Input.GetAxis("Horizontal") < -0.1f && Mathf.Abs(currentSpeed) > 1f)
         {
-            //else if steering right
+            //else if steering left and moving
             targetRotation = Quaternion.LookRotation(trans.forward + (trans.forward - trans.right));
         }
 
         //rotate car to desired steering position
-        trans.rotation = Quaternion.Lerp(trans.rotation, targetRotation, steer * Time.deltaTime);
+        trans.rotation = Quaternion.Lerp(trans.rotation, targetRotation, steer * Time.fixedDeltaTime);
     }
 }

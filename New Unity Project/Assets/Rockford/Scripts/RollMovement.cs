@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class RollMovement : MonoBehaviour
 {
+    /// <summary>
+    /// User car movement:
+    ///     User uses "Horizontal" and "Vertical" as inputs for movement
+    /// 
+    /// AI car movement:
+    ///     AI will take target position - current position (normalized) as "Horizontal" and "Vertical" inputs
+    ///     May need radius of satisfaction for rotational movement to stop snake movement
+    /// </summary>
+
     [SerializeField]
     private float motorForce, steerForce, brakeForce, slowForce;
     [SerializeField]
@@ -12,6 +21,7 @@ public class RollMovement : MonoBehaviour
     private float topSpeed, currentSpeed;
     [SerializeField]
     private Rigidbody rb;
+    private Vector3 inputVector;
 
     void Start()
     {
@@ -20,8 +30,12 @@ public class RollMovement : MonoBehaviour
 
     void Update()
     {
+        //For AI, inputVector should be target location - current location instead of Horizontal and Vertical Axis
+        inputVector = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+
+
         //create/update steering values
-        float steerRotation = Input.GetAxis("Horizontal") * steerForce;
+        float steerRotation = inputVector.x * steerForce;
 
         //store speed
         currentSpeed = rb.velocity.magnitude;
@@ -39,6 +53,8 @@ public class RollMovement : MonoBehaviour
             frWheel.steerAngle = steerRotation;
             flWheel.steerAngle = steerRotation;
         }
+
+        print(rb.velocity.magnitude);
     }
 
     void FixedUpdate()
@@ -61,12 +77,12 @@ public class RollMovement : MonoBehaviour
         if (currentSpeed > (topSpeed * 0.60f))
         {
             //if car is currently going faster the 3/5 of top speed reduce the amount of motor force added
-            acceleration = Input.GetAxis("Vertical") * (motorForce * 0.5f);
+            acceleration = inputVector.z * (motorForce * 0.5f);
         }
         else
         {
             //else car is going less than 3/5 of top speed allow full amount of motor force to be added
-            acceleration = Input.GetAxis("Vertical") * motorForce;//JUST THIS IF WANT TO REVERT TO PREVIOUS VERSION
+            acceleration = inputVector.z * motorForce;//JUST THIS IF WANT TO REVERT TO PREVIOUS VERSION
         }
 
         //apply acceleration
@@ -89,7 +105,7 @@ public class RollMovement : MonoBehaviour
         }
 
         //car's natural slow without acceleration applied
-        if(Input.GetAxis("Vertical") == 0)
+        if(inputVector.z == 0)
         {
             brWheel.brakeTorque = slowForce;
             blWheel.brakeTorque = slowForce;
@@ -99,7 +115,5 @@ public class RollMovement : MonoBehaviour
             brWheel.brakeTorque = 0;
             blWheel.brakeTorque = 0;
         }
-
-        print(acceleration);
     }
 }
