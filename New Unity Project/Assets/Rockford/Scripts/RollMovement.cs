@@ -41,11 +41,14 @@ public class RollMovement : MonoBehaviour
         currentSpeed = rb.velocity.magnitude;
 
         //apply steering
-        if (currentSpeed > 10f)
+/*
+        if (currentSpeed > (topSpeed * 0.1f))
         {
-            //if going faster that 10 turning angle is reduced
-            frWheel.steerAngle = steerRotation * (10 / currentSpeed);
-            flWheel.steerAngle = steerRotation * (10 / currentSpeed);
+*/
+            //if going faster than ___ top speed (_), turning angle is reduced based on speed
+            frWheel.steerAngle = steerRotation * (3 / (currentSpeed + 3));
+            flWheel.steerAngle = steerRotation * (3 / (currentSpeed + 3));
+/*
         }
         else
         {
@@ -53,6 +56,7 @@ public class RollMovement : MonoBehaviour
             frWheel.steerAngle = steerRotation;
             flWheel.steerAngle = steerRotation;
         }
+*/
 
         print(rb.velocity.magnitude);
     }
@@ -115,5 +119,29 @@ public class RollMovement : MonoBehaviour
             brWheel.brakeTorque = 0;
             blWheel.brakeTorque = 0;
         }
+
+        ApplyLocalPositionToVisuals(frWheel);
+        ApplyLocalPositionToVisuals(flWheel);
+        ApplyLocalPositionToVisuals(brWheel);
+        ApplyLocalPositionToVisuals(blWheel);
+    }
+
+    // finds the corresponding visual wheel
+    // correctly applies the transform
+    public void ApplyLocalPositionToVisuals(WheelCollider collider)
+    {
+        if (collider.transform.childCount == 0)
+        {
+            return;
+        }
+
+        Transform visualWheel = collider.transform.GetChild(0);
+
+        Vector3 position;
+        Quaternion rotation;
+        collider.GetWorldPose(out position, out rotation);
+
+        visualWheel.transform.position = position;
+        visualWheel.transform.rotation = rotation;
     }
 }
