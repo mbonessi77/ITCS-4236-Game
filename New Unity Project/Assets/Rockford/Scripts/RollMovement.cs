@@ -18,7 +18,7 @@ public class RollMovement : MonoBehaviour
     [SerializeField]
     private WheelCollider frWheel, flWheel, brWheel, blWheel;
     [SerializeField]
-    private float topSpeed, currentSpeed;
+    private float topSpeed, currentSpeed, steerSpeed;
     [SerializeField]
     private Rigidbody rb;
     private Vector3 inputVector;
@@ -41,39 +41,25 @@ public class RollMovement : MonoBehaviour
         currentSpeed = rb.velocity.magnitude;
 
         //apply steering
-/*
-        if (currentSpeed > (topSpeed * 0.1f))
-        {
-*/
-            //if going faster than ___ top speed (_), turning angle is reduced based on speed
-            frWheel.steerAngle = steerRotation * (3 / (currentSpeed + 3));
-            flWheel.steerAngle = steerRotation * (3 / (currentSpeed + 3));
-/*
-        }
-        else
-        {
-            //else going slow enough for full turning angles
-            frWheel.steerAngle = steerRotation;
-            flWheel.steerAngle = steerRotation;
-        }
-*/
+        steerRotation *= 3 / (currentSpeed + 3);
 
-        print(rb.velocity.magnitude);
+        float steerAngleFR = Mathf.LerpAngle(frWheel.steerAngle, steerRotation, steerSpeed * Time.deltaTime);
+        float steerAngleFL = Mathf.LerpAngle(flWheel.steerAngle, steerRotation, steerSpeed * Time.deltaTime);
+
+        frWheel.steerAngle = steerAngleFR;
+        flWheel.steerAngle = steerAngleFL;
+
+        ApplyLocalPositionToVisuals(frWheel);
+        ApplyLocalPositionToVisuals(flWheel);
+        ApplyLocalPositionToVisuals(brWheel);
+        ApplyLocalPositionToVisuals(blWheel);
+
+        //display player speed in console
+        //print(rb.velocity.magnitude);
     }
 
     void FixedUpdate()
     {
-        /*
-        //For speeds??????
-        float wheelRadius = brWheel.radius;
-        float wheelRPM = brWheel.rpm;
-        float circumference; //here we will store the circumference
-        float speedInMph; // and here the speed in mhiles in hour
-
-        circumference = 2.0f * 3.14f * wheelRadius; // Finding circumFerence 2 Pi R
-        speedInMph = ((circumference * wheelRPM) * 60) * 0.62f; // finding mph
-        */
-
         //create acceleration values
         float acceleration;
 
@@ -119,28 +105,27 @@ public class RollMovement : MonoBehaviour
             brWheel.brakeTorque = 0;
             blWheel.brakeTorque = 0;
         }
-
-        ApplyLocalPositionToVisuals(frWheel);
-        ApplyLocalPositionToVisuals(flWheel);
-        ApplyLocalPositionToVisuals(brWheel);
-        ApplyLocalPositionToVisuals(blWheel);
     }
 
     // finds the corresponding visual wheel
     // correctly applies the transform
     public void ApplyLocalPositionToVisuals(WheelCollider collider)
     {
+        //if there is not a child object (the visual wheel)
         if (collider.transform.childCount == 0)
         {
             return;
         }
 
+        //assign child object (the visual wheel)
         Transform visualWheel = collider.transform.GetChild(0);
 
+        //get and store the rotation and position of the wheel collider
         Vector3 position;
         Quaternion rotation;
         collider.GetWorldPose(out position, out rotation);
 
+        //assign those values from the wheel collider to the visual wheels
         visualWheel.transform.position = position;
         visualWheel.transform.rotation = rotation;
     }
