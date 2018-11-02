@@ -124,6 +124,11 @@ public class RollMovement : MonoBehaviour
         }
     }
 
+    public float GetCurrentSpeed()
+    {
+        return currentSpeed;
+    }
+
     // finds the corresponding visual wheel
     // correctly applies the transform
     public void ApplyLocalPositionToVisuals(WheelCollider collider)
