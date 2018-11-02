@@ -11,13 +11,14 @@ public class AIMovement : MonoBehaviour
     /// </summary>
 
     [SerializeField]
-    private float motorForce, steerForce, brakeForce, slowForce, radiusOfSat;
+    private float motorForce, steerForce, brakeForce, radiusOfSat;
     [SerializeField]
     private WheelCollider frWheel, flWheel, brWheel, blWheel;
     [SerializeField]
     private float topSpeed, currentSpeed, steerSpeed;
     [SerializeField]
     private Rigidbody rb;
+    private Vector3 localVel;
     private Vector3 inputVector;
     private float rotDirLR;
     private float rotDirFB;
@@ -36,7 +37,12 @@ public class AIMovement : MonoBehaviour
         inputVector.y = transform.position.y;
         inputVector.Normalize();
 
+        //store local velocity
+        localVel = transform.InverseTransformDirection(rb.velocity);
+
+        //get dot products for left and right of car, >0 is right <0 left
         rotDirLR = Vector3.Dot(transform.right, inputVector);
+        //get dot product for in front and behind of car, >0 is in front <0 is behind
         rotDirFB = Vector3.Dot(transform.forward, inputVector);
         float steerRotation;
         //create/update steering values
@@ -72,24 +78,29 @@ public class AIMovement : MonoBehaviour
         //store speed
         currentSpeed = rb.velocity.magnitude;
 
-        //apply steering
+        //create desired steer rotation
         steerRotation *= 3 / (currentSpeed + 3);
 
+        //lerp wheel rotation so wheels don't just instantly assign to new direction
         float steerAngleFR = Mathf.LerpAngle(frWheel.steerAngle, steerRotation, steerSpeed * Time.deltaTime);
         float steerAngleFL = Mathf.LerpAngle(flWheel.steerAngle, steerRotation, steerSpeed * Time.deltaTime);
 
+        //apply steering (of the lerping rotation)
         frWheel.steerAngle = steerAngleFR;
         flWheel.steerAngle = steerAngleFL;
 
+        //apply rotation to all visual wheels (steering and rpm)
         ApplyLocalPositionToVisuals(frWheel);
         ApplyLocalPositionToVisuals(flWheel);
         ApplyLocalPositionToVisuals(brWheel);
         ApplyLocalPositionToVisuals(blWheel);
 
         //display AI speed in console
-        //print(rb.velocity.magnitude);
+        //print(currentSpeed);
+        //print(localVel.z);
         //print("DotLR: " + rotDirLR + " DotFB: " + rotDirFB);
 
+        //draw a debug line to see target position
         Debug.DrawLine(targetPos + new Vector3(0f, 10f, 0f), targetPos, Color.red);
     }
 
@@ -133,19 +144,26 @@ public class AIMovement : MonoBehaviour
             brWheel.motorTorque = 0;
             blWheel.motorTorque = 0;
         }
-
+        
         //apply brakes
-        //if within the radius of satisfaction of the target position
-        if (Vector3.Distance(targetPos, transform.position) < radiusOfSat)
+        //if within the radius of satisfaction of the target position OR target is behind and local velocity is forward OR taget is in front and local velocity is backwards
+        if (Vector3.Distance(targetPos, transform.position) < radiusOfSat || (rotDirFB < 0 && localVel.z > 0) || (rotDirFB > 0 && localVel.z < 0))
         {
+            //car's natural deceleration
+            rb.velocity *= 0.997f;
+            //apply actual brakes to wheel colliders for added deceleration
             brWheel.brakeTorque = brakeForce;
             blWheel.brakeTorque = brakeForce;
+            frWheel.brakeTorque = brakeForce;
+            flWheel.brakeTorque = brakeForce;
         }
         else
         {
             //else not within radius of satisfaction
             brWheel.brakeTorque = 0;
             blWheel.brakeTorque = 0;
+            frWheel.brakeTorque = 0;
+            flWheel.brakeTorque = 0;
         }
     }
 

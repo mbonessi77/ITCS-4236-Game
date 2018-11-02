@@ -7,20 +7,17 @@ public class RollMovement : MonoBehaviour
     /// <summary>
     /// User car movement:
     ///     User uses "Horizontal" and "Vertical" as inputs for movement
-    /// 
-    /// AI car movement:
-    ///     AI will take target position - current position (normalized) as "Horizontal" and "Vertical" inputs
-    ///     May need radius of satisfaction for rotational movement to stop snake movement
     /// </summary>
 
     [SerializeField]
-    private float motorForce, steerForce, brakeForce, slowForce;
+    private float motorForce, steerForce, brakeForce;
     [SerializeField]
     private WheelCollider frWheel, flWheel, brWheel, blWheel;
     [SerializeField]
     private float topSpeed, currentSpeed, steerSpeed;
     [SerializeField]
     private Rigidbody rb;
+    private Vector3 localVel;
     private Vector3 inputVector;
 
     void Start()
@@ -33,6 +30,8 @@ public class RollMovement : MonoBehaviour
         //For AI, inputVector should be target location - current location instead of Horizontal and Vertical Axis
         inputVector = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
+        //store local velocity
+        localVel = transform.InverseTransformDirection(rb.velocity);
 
         //create/update steering values
         float steerRotation = inputVector.x * steerForce;
@@ -40,22 +39,26 @@ public class RollMovement : MonoBehaviour
         //store speed
         currentSpeed = rb.velocity.magnitude;
 
-        //apply steering
+        //create desired steer rotation
         steerRotation *= 3 / (currentSpeed + 3);
 
+        //lerp wheel rotation so wheels don't just instantly assign to new direction
         float steerAngleFR = Mathf.LerpAngle(frWheel.steerAngle, steerRotation, steerSpeed * Time.deltaTime);
         float steerAngleFL = Mathf.LerpAngle(flWheel.steerAngle, steerRotation, steerSpeed * Time.deltaTime);
 
+        //apply steering (of the lerping rotation)
         frWheel.steerAngle = steerAngleFR;
         flWheel.steerAngle = steerAngleFL;
 
+        //apply rotation to all visual wheels (steering and rpm)
         ApplyLocalPositionToVisuals(frWheel);
         ApplyLocalPositionToVisuals(flWheel);
         ApplyLocalPositionToVisuals(brWheel);
         ApplyLocalPositionToVisuals(blWheel);
 
         //display player speed in console
-        //print(rb.velocity.magnitude);
+        //print(currentSpeed);
+        //print(localVel.z);
     }
 
     void FixedUpdate()
@@ -76,34 +79,48 @@ public class RollMovement : MonoBehaviour
         }
 
         //apply acceleration
-        if (currentSpeed < topSpeed)
+        //if not at top speed and acceleration is being pressed
+        if (currentSpeed < topSpeed && Mathf.Abs(inputVector.z) > 0.1f)
         {
             brWheel.motorTorque = acceleration;
             blWheel.motorTorque = acceleration;
         }
         else
         {
+            //else acceleration is not being pressed, OR at top speed so slow acceleration to limit car to top speed
             brWheel.motorTorque = 0;
             blWheel.motorTorque = 0;
         }
 
-        //user applied brakes
+        //apply brakes/deceleration
         if (Input.GetKey(KeyCode.Space))
         {
+            //car's natural deceleration
+            rb.velocity *= 0.997f;
+            //apply actual brakes to wheel colliders for added deceleration
             brWheel.brakeTorque = brakeForce;
             blWheel.brakeTorque = brakeForce;
+            frWheel.brakeTorque = brakeForce;
+            flWheel.brakeTorque = brakeForce;
         }
-
-        //car's natural slow without acceleration applied
-        if(inputVector.z == 0)
+        else if(inputVector.z == 0)
         {
-            brWheel.brakeTorque = slowForce;
-            blWheel.brakeTorque = slowForce;
+            //if not pressing acceleration
+            //car's natural deceleration only
+            rb.velocity *= 0.997f;
+            //no added brakes to wheel colliders
+            brWheel.brakeTorque = 0;
+            blWheel.brakeTorque = 0;
+            frWheel.brakeTorque = 0;
+            flWheel.brakeTorque = 0;
         }
         else
         {
+            //else no brakes or deceleration
             brWheel.brakeTorque = 0;
             blWheel.brakeTorque = 0;
+            frWheel.brakeTorque = 0;
+            flWheel.brakeTorque = 0;
         }
     }
 
