@@ -203,10 +203,10 @@ public class AIMovement : MonoBehaviour
         //if not at top speed and not in radius of satisfaction of target position
         if (currentSpeed < topSpeed && Vector3.Distance(targetPos, transform.position) > radiusOfSat)
         {
-            //(Vector3.Distance(targetPos, transform.position) / (currentSpeed + 1)) -
+            //(Vector3.Distance(targetPos, transform.position) [5 is to increase hpw fast the car accelerates]/ (currentSpeed + 1)) -
             //- makes the amount the car speeds up be based on how far the car is from the target devided by the current speed of the car
-            brWheel.motorTorque = acceleration * turnMultiplier * (Vector3.Distance(targetPos, transform.position) / (currentSpeed + 1));
-            blWheel.motorTorque = acceleration * turnMultiplier * (Vector3.Distance(targetPos, transform.position) / (currentSpeed + 1));
+            brWheel.motorTorque = acceleration * turnMultiplier * ((Vector3.Distance(targetPos, transform.position) + 5) / (currentSpeed + 1));
+            blWheel.motorTorque = acceleration * turnMultiplier * ((Vector3.Distance(targetPos, transform.position) + 5) / (currentSpeed + 1));
         }
         else
         {
