@@ -49,6 +49,6 @@ public class GUIManager : MonoBehaviour
         timerText.text = "Time: " + minutes + ":" + seconds.ToString("00"); ;
 
         //display current speed
-        speedText.text = "" + Mathf.Floor(playerScript.GetCurrentSpeed()) + "mph";
+        speedText.text = "" + Mathf.Floor(playerScript.GetCurrentSpeed() * 1.5f) + "mph";
     }
 }

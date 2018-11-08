@@ -22,16 +22,41 @@ public class AIMovement : MonoBehaviour
     private Vector3 inputVector;
     private float rotDirLR;
     private float rotDirFB;
+    private Node nextTarget;
     [SerializeField]
     private Vector3 targetPos;
+    private Stack<Node> bestPath = new Stack<Node>();
+
+    //a* script
+    [SerializeField]
+    private AStarSearch aStar;
 
     void Start()
     {
+        //Start with the target position being where the car is
+        nextTarget = new Node(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z), 0);
+        targetPos = new Vector3(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), Mathf.RoundToInt(transform.position.z));
 
+        //----------For testing pathfinding and pathfollowing
+        Invoke("CalculatePathTestFunction", 5f);
+        //----------
+    }
+
+    void CalculatePathTestFunction()
+    {
+        //bestPath = new Stack<Node>(new Stack<Node>(aStar.CalulatePath(500, 25)));
     }
 
     void Update()
     {
+        //if there is another node postion in the stack and car is within the radius of satisfaction, pop the next node off and set as next target
+        if (bestPath.Count > 0 && Vector3.Distance(transform.position, targetPos) < radiusOfSat)
+        {
+            nextTarget = bestPath.Pop();
+            targetPos = new Vector3(nextTarget.GetPosX(), transform.position.y, nextTarget.GetPosZ());
+            //print(nextTarget.ToString());
+        }
+
         //For AI, inputVector should be target location - current location instead of Horizontal and Vertical Axis
         inputVector = targetPos - transform.position;
         inputVector.y = transform.position.y;
@@ -44,8 +69,10 @@ public class AIMovement : MonoBehaviour
         rotDirLR = Vector3.Dot(transform.right, inputVector);
         //get dot product for in front and behind of car, >0 is in front <0 is behind
         rotDirFB = Vector3.Dot(transform.forward, inputVector);
-        float steerRotation;
+
         //create/update steering values
+        #region
+        float steerRotation;
         //if target is behind the AI car
         if (rotDirFB < 0)
         {
@@ -74,14 +101,17 @@ public class AIMovement : MonoBehaviour
                 steerRotation = rotDirLR * steerForce;
             }
         }
+        #endregion
 
         //store speed
         currentSpeed = rb.velocity.magnitude;
 
+        //------------ Delete (here as backup, in case I need to revert to previous version)
         //create desired steer rotation
-        steerRotation *= 3 / (currentSpeed + 3);
+        //steerRotation *= 3 / (currentSpeed + 3);
+        //------------
 
-        //lerp wheel rotation so wheels don't just instantly assign to new direction
+        //lerp wheel rotation so wheels don't just instantly assign to new direction (steer speed does need to be fast enough though)
         float steerAngleFR = Mathf.LerpAngle(frWheel.steerAngle, steerRotation, steerSpeed * Time.deltaTime);
         float steerAngleFL = Mathf.LerpAngle(flWheel.steerAngle, steerRotation, steerSpeed * Time.deltaTime);
 
@@ -101,7 +131,7 @@ public class AIMovement : MonoBehaviour
         //print("DotLR: " + rotDirLR + " DotFB: " + rotDirFB);
 
         //draw a debug line to see target position
-        Debug.DrawLine(targetPos + new Vector3(0f, 10f, 0f), targetPos, Color.red);
+        Debug.DrawLine(targetPos + new Vector3(0f, 50f, 0f), targetPos, Color.blue);
     }
 
     void FixedUpdate()
@@ -110,6 +140,7 @@ public class AIMovement : MonoBehaviour
         float acceleration;
 
         //update acceleration values
+        #region
         //if target is behind the AI car
         if (rotDirFB < 0)
         {
@@ -130,13 +161,52 @@ public class AIMovement : MonoBehaviour
                 acceleration = 1 * motorForce;//JUST THIS IF WANT TO REVERT TO PREVIOUS VERSION
             }
         }
+        #endregion
+
+        //Create and determine turn amount to alter acceleration
+        #region
+        float turnMultiplier = 1f;
+        //If target is behind car
+        if(rotDirFB < 0)
+        {
+            turnMultiplier = 1f;
+        }
+        else if (rotDirLR > 0.8f)
+        {
+            //else if target is far to the right of the AI car
+            turnMultiplier = 0.2f;
+        }
+        else if(rotDirLR > 0.6f)
+        {
+            //else if target is medium/far to the right of the AI car
+            turnMultiplier = 0.4f;
+        }
+        else if(rotDirLR > 0.4f)
+        {
+            //else if target is slightly/medium to the right of the AI car
+            turnMultiplier = 0.6f;
+        }
+        else if(rotDirLR > 0.2f)
+        {
+            //else if target is slightly to the right of the AI car
+            turnMultiplier = 0.8f;
+        }
+        else
+        {
+            //else if target is straight on or very slightly to the right of the AI car
+            turnMultiplier = 1f;
+        }
+        #endregion
 
         //apply acceleration
+        #region
         //if not at top speed and not in radius of satisfaction of target position
         if (currentSpeed < topSpeed && Vector3.Distance(targetPos, transform.position) > radiusOfSat)
         {
-            brWheel.motorTorque = acceleration;
-            blWheel.motorTorque = acceleration;
+            //(Vector3.Distance(targetPos, transform.position) / ((currentSpeed / 1.5f) + 1)) -
+            //- makes the amount the car speeds up be based on how far the car is from the target devided by the current speed of the car
+            brWheel.motorTorque = acceleration * turnMultiplier * (Vector3.Distance(targetPos, transform.position) / (currentSpeed + 1));
+            blWheel.motorTorque = acceleration * turnMultiplier * (Vector3.Distance(targetPos, transform.position) / (currentSpeed + 1));
         }
         else
         {
@@ -144,8 +214,10 @@ public class AIMovement : MonoBehaviour
             brWheel.motorTorque = 0;
             blWheel.motorTorque = 0;
         }
-        
+        #endregion
+
         //apply brakes
+        #region
         //if within the radius of satisfaction of the target position OR target is behind and local velocity is forward OR taget is in front and local velocity is backwards
         if (Vector3.Distance(targetPos, transform.position) < radiusOfSat || (rotDirFB < 0 && localVel.z > 0) || (rotDirFB > 0 && localVel.z < 0))
         {
@@ -165,6 +237,7 @@ public class AIMovement : MonoBehaviour
             frWheel.brakeTorque = 0;
             flWheel.brakeTorque = 0;
         }
+        #endregion
     }
 
     // finds the corresponding visual wheel

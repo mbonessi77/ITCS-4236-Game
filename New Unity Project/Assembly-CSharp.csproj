@@ -65,7 +65,11 @@
     <Compile Include="Assets\Michael\Scripts\TrackGenerator.cs" />
     <Compile Include="Assets\Parth\MusicClass.cs" />
     <Compile Include="Assets\Parth\NewBehaviourScript.cs" />
-    <Compile Include="Assets\Rockford\Scripts\AIMovement.cs" />
+    <Compile Include="Assets\Rockford\Scripts\AI Scripts\AIMovement.cs" />
+    <Compile Include="Assets\Rockford\Scripts\AI Scripts\AStarSearch.cs" />
+    <Compile Include="Assets\Rockford\Scripts\AI Scripts\Node.cs" />
+    <Compile Include="Assets\Rockford\Scripts\AI Scripts\PriorityQueue.cs" />
+    <Compile Include="Assets\Rockford\Scripts\AI Scripts\WorldDecomposer.cs" />
     <Compile Include="Assets\Rockford\Scripts\Alternate Scripts\CartoonMovement.cs" />
     <Compile Include="Assets\Rockford\Scripts\Alternate Scripts\emptyObjectFollow.cs" />
     <Compile Include="Assets\Rockford\Scripts\Alternate Scripts\IsGroundedTrigger.cs" />
