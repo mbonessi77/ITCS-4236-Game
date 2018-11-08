@@ -38,7 +38,7 @@ public class AIMovement : MonoBehaviour
         targetPos = new Vector3(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), Mathf.RoundToInt(transform.position.z));
 
         //----------For testing pathfinding and pathfollowing
-        Invoke("CalculatePathTestFunction", 5f);
+        Invoke("CalculatePathTestFunction", 2f);
         //----------
     }
 
@@ -171,29 +171,29 @@ public class AIMovement : MonoBehaviour
         {
             turnMultiplier = 1f;
         }
-        else if (rotDirLR > 0.8f)
+        else if (Mathf.Abs(rotDirLR) > 0.8f)
         {
-            //else if target is far to the right of the AI car
+            //else if target is far to the right/left of the AI car
             turnMultiplier = 0.2f;
         }
-        else if(rotDirLR > 0.6f)
+        else if (Mathf.Abs(rotDirLR) > 0.6f)
         {
-            //else if target is medium/far to the right of the AI car
+            //else if target is medium/far to the right/left of the AI car
             turnMultiplier = 0.4f;
         }
-        else if(rotDirLR > 0.4f)
+        else if (Mathf.Abs(rotDirLR) > 0.4f)
         {
-            //else if target is slightly/medium to the right of the AI car
+            //else if target is slightly/medium to the right/left of the AI car
             turnMultiplier = 0.6f;
         }
-        else if(rotDirLR > 0.2f)
+        else if (Mathf.Abs(rotDirLR) > 0.2f)
         {
-            //else if target is slightly to the right of the AI car
+            //else if target is slightly to the right/left of the AI car
             turnMultiplier = 0.8f;
         }
         else
         {
-            //else if target is straight on or very slightly to the right of the AI car
+            //else if target is straight on or very slightly to the right/left of the AI car
             turnMultiplier = 1f;
         }
         #endregion
@@ -203,7 +203,7 @@ public class AIMovement : MonoBehaviour
         //if not at top speed and not in radius of satisfaction of target position
         if (currentSpeed < topSpeed && Vector3.Distance(targetPos, transform.position) > radiusOfSat)
         {
-            //(Vector3.Distance(targetPos, transform.position) / ((currentSpeed / 1.5f) + 1)) -
+            //(Vector3.Distance(targetPos, transform.position) / (currentSpeed + 1)) -
             //- makes the amount the car speeds up be based on how far the car is from the target devided by the current speed of the car
             brWheel.motorTorque = acceleration * turnMultiplier * (Vector3.Distance(targetPos, transform.position) / (currentSpeed + 1));
             blWheel.motorTorque = acceleration * turnMultiplier * (Vector3.Distance(targetPos, transform.position) / (currentSpeed + 1));
