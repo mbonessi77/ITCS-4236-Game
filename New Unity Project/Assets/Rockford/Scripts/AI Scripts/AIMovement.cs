@@ -166,7 +166,25 @@ public class AIMovement : MonoBehaviour
         //Create and determine turn amount to alter acceleration
         #region
         float turnMultiplier = 1f;
+        //New version
         //If target is behind car
+        if (rotDirFB < 0)
+        {
+            turnMultiplier = 1f;
+        }
+        else
+        {
+            turnMultiplier = 1.1f - Mathf.Abs(rotDirLR);
+
+            if(turnMultiplier > 1f)
+            {
+                turnMultiplier = 1f;
+            }
+        }
+        //print(turnMultiplier);
+
+        //---------- This is original version (keeping in case bugs happen and want to try with previous version)
+        /*//If target is behind car
         if(rotDirFB < 0)
         {
             turnMultiplier = 1f;
@@ -195,7 +213,8 @@ public class AIMovement : MonoBehaviour
         {
             //else if target is straight on or very slightly to the right/left of the AI car
             turnMultiplier = 1f;
-        }
+        }*/
+        //----------
         #endregion
 
         //apply acceleration
