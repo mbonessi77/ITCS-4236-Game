@@ -6,6 +6,7 @@ public class TrackGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject[] tracks;
     [SerializeField] private GameObject currentTrack;
+    [SerializeField] private GameObject finishLine;
 
 	// Use this for initialization
 	void Start ()
@@ -15,7 +16,8 @@ public class TrackGenerator : MonoBehaviour
         {
             SpawnTrack();
         }
-	}
+        currentTrack = Instantiate(finishLine, GetGrandchildPosition(currentTrack), Quaternion.identity);
+    }
     
     //Picks a random piece of track to spawn at the end of the current track
     void SpawnTrack()
