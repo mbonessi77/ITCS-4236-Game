@@ -5,8 +5,9 @@ using UnityEngine;
 public class TrackGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject[] tracks;
-    [SerializeField] private GameObject currentTrack;
+    [SerializeField] private GameObject currentTrack; //Track that has to start in the world to generate the rest of the track
     [SerializeField] private GameObject finishLine;
+    [SerializeField] private GameObject wayPoints;
 
 	// Use this for initialization
 	void Start ()
@@ -16,7 +17,7 @@ public class TrackGenerator : MonoBehaviour
         {
             SpawnTrack();
         }
-        currentTrack = Instantiate(finishLine, GetGrandchildPosition(currentTrack), Quaternion.identity);
+        currentTrack = Instantiate(finishLine, GetGrandchildPosition(currentTrack), Quaternion.identity); //Attach the finish line piece to the end
     }
     
     //Picks a random piece of track to spawn at the end of the current track
@@ -25,6 +26,7 @@ public class TrackGenerator : MonoBehaviour
         int rand = Random.Range(0, tracks.Length);
 
         currentTrack = Instantiate(tracks[rand], GetGrandchildPosition(currentTrack), Quaternion.identity);
+        Instantiate(wayPoints, GetGrandchildPosition(currentTrack), Quaternion.identity);
     }
 
     //Gets the position of a child's child to clean the code up a little
