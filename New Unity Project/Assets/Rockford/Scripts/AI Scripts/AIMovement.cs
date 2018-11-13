@@ -31,6 +31,8 @@ public class AIMovement : MonoBehaviour
     [SerializeField]
     private AStarSearch aStar;
 
+    private int waypoint_int = 0;
+
     void Start()
     {
         //Start with the target position being where the car is
@@ -55,6 +57,12 @@ public class AIMovement : MonoBehaviour
             nextTarget = bestPath.Pop();
             targetPos = new Vector3(nextTarget.GetPosX(), transform.position.y, nextTarget.GetPosZ());
             //print(nextTarget.ToString());
+        }
+        else if (bestPath.Count <= 0)
+        {
+            Transform waypoint = Waypoint_Cache.waypoints[waypoint_int].transform.GetChild(Random.Range(0, 5));
+            bestPath = new Stack<Node>(new Stack<Node>(aStar.CalulatePath(waypoint.position.x, waypoint.position.z)));
+            waypoint_int += 1;
         }
 
         //For AI, inputVector should be target location - current location instead of Horizontal and Vertical Axis
