@@ -110,4 +110,9 @@ public class WorldDecomposer : MonoBehaviour {
     {
         return cols;
     }
+
+    public float GetNodeSize()
+    {
+        return nodeSize;
+    }
 }

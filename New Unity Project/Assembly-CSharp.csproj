@@ -74,6 +74,7 @@
     <Compile Include="Assets\Rockford\Scripts\Alternate Scripts\emptyObjectFollow.cs" />
     <Compile Include="Assets\Rockford\Scripts\Alternate Scripts\IsGroundedTrigger.cs" />
     <Compile Include="Assets\Rockford\Scripts\CameraControl.cs" />
+    <Compile Include="Assets\Rockford\Scripts\GameManager.cs" />
     <Compile Include="Assets\Rockford\Scripts\GUIManager.cs" />
     <Compile Include="Assets\Rockford\Scripts\RollMovement.cs" />
     <Compile Include="Assets\Rockford\Scripts\Waypoint_Cache.cs" />
