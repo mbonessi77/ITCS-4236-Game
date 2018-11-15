@@ -9,6 +9,9 @@ public class TrackGenerator : MonoBehaviour
     [SerializeField] private GameObject finishLine;
     [SerializeField] private GameObject wayPoints;
 
+    private GameObject currentWaypoint;
+    private int waypoint_int = 0;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -26,7 +29,11 @@ public class TrackGenerator : MonoBehaviour
         int rand = Random.Range(0, tracks.Length);
 
         currentTrack = Instantiate(tracks[rand], GetGrandchildPosition(currentTrack), Quaternion.identity);
-        Instantiate(wayPoints, GetGrandchildPosition(currentTrack), Quaternion.identity);
+        currentWaypoint = Instantiate(wayPoints, GetGrandchildPosition(currentTrack), Quaternion.identity);
+
+        Waypoint_Cache.waypoints.Add(waypoint_int, currentWaypoint);
+        waypoint_int++;
+        //print(Waypoint_Cache.waypoints.Count);
     }
 
     //Gets the position of a child's child to clean the code up a little

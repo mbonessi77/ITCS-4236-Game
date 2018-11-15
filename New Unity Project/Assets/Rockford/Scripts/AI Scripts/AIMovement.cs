@@ -26,12 +26,13 @@ public class AIMovement : MonoBehaviour
     [SerializeField]
     private Vector3 targetPos;
     private Stack<Node> bestPath = new Stack<Node>();
+    private List<Node> fullPath = new List<Node>();
 
     //a* script
     [SerializeField]
     private AStarSearch aStar;
 
-    private int waypoint_int = 0;
+    private int[] waypointIndex;
 
     void Start()
     {
@@ -39,9 +40,60 @@ public class AIMovement : MonoBehaviour
         nextTarget = new Node(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z), 0);
         targetPos = new Vector3(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), Mathf.RoundToInt(transform.position.z));
 
+        Invoke("PathCreation", 3f);
+
         //----------For testing pathfinding and pathfollowing
         Invoke("CalculatePathTestFunction", 2f);
         //----------
+    }
+
+    void PathCreation()
+    {
+        //create the waypointIndex array to hold to randomly selected waypoints along the track
+        waypointIndex = new int[Waypoint_Cache.waypoints.Count];
+
+        //randomly assign the selected waypoints at each area
+        for (int i = 0; i < Waypoint_Cache.waypoints.Count; i++)
+        {
+            waypointIndex[i] = Random.Range(0, 5);
+        }
+        //print(waypointIndex.Length);
+
+        //create and assign the starting point and goal point for the first waypoint
+        Transform startWaypoint = transform;
+        Transform goalWaypoint = Waypoint_Cache.waypoints[0].transform.GetChild(waypointIndex[0]);
+
+        //special case for the first waypoint starting from the ai car's location
+        bestPath = new Stack<Node>(new Stack<Node>(aStar.CalulatePath(startWaypoint.position.x, startWaypoint.position.z, goalWaypoint.position.x, goalWaypoint.position.z)));
+
+        //pop off the first waypoint, to ensure no duplicates in the fullPath list
+        bestPath.Pop();
+
+        //pop off all node locations and add to the full path list to follow from start to finish
+        while (bestPath.Count > 0)
+        {
+            fullPath.Add(bestPath.Pop());
+        }
+
+        //for all remaining track waypoint segments
+        for (int i = 1; i < Waypoint_Cache.waypoints.Count; i++)
+        {
+            //assign starting waypoint location of segment and goal waypoint location of segment
+            startWaypoint = Waypoint_Cache.waypoints[i - 1].transform.GetChild(waypointIndex[i - 1]);
+            goalWaypoint = Waypoint_Cache.waypoints[i].transform.GetChild(waypointIndex[i]);
+
+            //generate the path for the segment
+            bestPath = new Stack<Node>(new Stack<Node>(aStar.CalulatePath(startWaypoint.position.x, startWaypoint.position.z, goalWaypoint.position.x, goalWaypoint.position.z)));
+
+            //pop off the first waypoint, to ensure no duplicate waypoints in the fullPath list
+            bestPath.Pop();
+
+            //pop off all node locations and add to the full path list to follow from start to finish
+            while (bestPath.Count > 0)
+            {
+                fullPath.Add(bestPath.Pop());
+            }
+        }
     }
 
     void CalculatePathTestFunction()
@@ -52,18 +104,19 @@ public class AIMovement : MonoBehaviour
     void Update()
     {
         //if there is another node postion in the stack and car is within the radius of satisfaction, pop the next node off and set as next target
-        if (bestPath.Count > 0 && Vector3.Distance(transform.position, targetPos) < radiusOfSat)
+        if (fullPath.Count > 0 && Vector3.Distance(transform.position, targetPos) < radiusOfSat)
         {
-            nextTarget = bestPath.Pop();
+            nextTarget = fullPath[0];
+            fullPath.RemoveAt(0);
             targetPos = new Vector3(nextTarget.GetPosX(), transform.position.y, nextTarget.GetPosZ());
             //print(nextTarget.ToString());
-        }
+        }/*
         else if (bestPath.Count <= 0)
         {
             Transform waypoint = Waypoint_Cache.waypoints[waypoint_int].transform.GetChild(Random.Range(0, 5));
             bestPath = new Stack<Node>(new Stack<Node>(aStar.CalulatePath(waypoint.position.x, waypoint.position.z)));
             waypoint_int += 1;
-        }
+        }*/
 
         //For AI, inputVector should be target location - current location instead of Horizontal and Vertical Axis
         inputVector = targetPos - transform.position;
