@@ -66,11 +66,11 @@ public class Node {
 
     public float GetPosX()
     {
-        return (col * 2) + 1;
+        return col + 0.5f;
     }
     public float GetPosZ()
     {
-        return (row * 2) + 1;
+        return row + 0.5f;
     }
 
 
