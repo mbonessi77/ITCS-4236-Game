@@ -38,7 +38,7 @@ public class AStarSearch : MonoBehaviour {
         //CalulatePath(trans.position.x, trans.position.z);
     }
 
-    public Stack<Node> CalulatePath(float vecX, float vecZ)
+    public Stack<Node> CalulatePath(float startVecX, float startVecZ, float goalVecX, float goalVecZ)
     {
         rows = worldDecomp.GetRows();
         cols = worldDecomp.GetCols();
@@ -60,10 +60,10 @@ public class AStarSearch : MonoBehaviour {
             }
         }
 
-        int startRow = Mathf.RoundToInt(trans.position.z);
-        int startCol = Mathf.RoundToInt(trans.position.x);
-        int goalRow = Mathf.RoundToInt(vecZ);
-        int goalCol = Mathf.RoundToInt(vecX);
+        int startRow = Mathf.RoundToInt(Mathf.RoundToInt(startVecZ / worldDecomp.GetNodeSize()) * worldDecomp.GetNodeSize()) / 2;
+        int startCol = Mathf.RoundToInt(Mathf.RoundToInt(startVecX / worldDecomp.GetNodeSize()) * worldDecomp.GetNodeSize()) / 2;
+        int goalRow = Mathf.RoundToInt(Mathf.RoundToInt(goalVecZ / worldDecomp.GetNodeSize()) * worldDecomp.GetNodeSize()) / 2;
+        int goalCol = Mathf.RoundToInt(Mathf.RoundToInt(goalVecX / worldDecomp.GetNodeSize()) * worldDecomp.GetNodeSize()) / 2;
 
         //assign null to allow enterance to while loop
         Node currentSpace = null;
@@ -75,6 +75,7 @@ public class AStarSearch : MonoBehaviour {
         //add starting tile to openList for first movement turn
         openList.Add(terrainSpace[startRow, startCol]);
 
+        //print("rows: " + rows + " cols: " + cols + " gRow: " + goalRow + " gCol: " + goalCol);
         //While not at goal or not completely searched
         while (currentSpace != terrainSpace[goalRow, goalCol] && openList.GetSize() != 0)
         {
