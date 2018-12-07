@@ -67,7 +67,9 @@
     <Compile Include="Assets\Parth\AudioScript.cs" />
     <Compile Include="Assets\Parth\Car.cs" />
     <Compile Include="Assets\Parth\ExampleClass.cs" />
+    <Compile Include="Assets\Parth\MusicClass.cs" />
     <Compile Include="Assets\Parth\NewBehaviourScript.cs" />
+    <Compile Include="Assets\Parth\SawSoundController.cs" />
     <Compile Include="Assets\Rockford\Scripts\AI Scripts\AIMovement.cs" />
     <Compile Include="Assets\Rockford\Scripts\AI Scripts\AStarSearch.cs" />
     <Compile Include="Assets\Rockford\Scripts\AI Scripts\Node.cs" />
@@ -86,16 +88,16 @@
     <Compile Include="Assets\Walker\Scripts\emptyObjectFollow2.cs" />
     <Compile Include="Assets\Walker\Scripts\RollMovement2.cs" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/ITCS-4236-Game2/New Unity Project/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/ITCS-4236-Game/New Unity Project/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/ITCS-4236-Game2/New Unity Project/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/ITCS-4236-Game/New Unity Project/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/ITCS-4236-Game2/New Unity Project/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/ITCS-4236-Game/New Unity Project/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/ITCS-4236-Game2/New Unity Project/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/ITCS-4236-Game/New Unity Project/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -278,7 +280,7 @@
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/Unity.Locator.dll</HintPath>
     </Reference>
     <Reference Include="Facebook.Unity.Settings">
-      <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/ITCS-4236-Game2/New Unity Project/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
+      <HintPath>C:/Users/Antonio/Desktop/Folders/School/Computer Science/Advanced AI/Deliverables/ITCS-4236-Game/New Unity Project/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
