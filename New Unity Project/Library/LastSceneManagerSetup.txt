@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Rockford/Scenes/MichaelLevel(RockWork).unity
+- path: Assets/Rockford/Scenes/MainMenu(RockWork).unity
   isLoaded: 1
   isActive: 1

@@ -59,7 +59,8 @@ public class WorldDecomposer : MonoBehaviour {
 				//does our raycast hit anything at this point in the map
 				RaycastHit hit;
 
-				//bit shift the index of the layer (8) and (9) to get two bit masks
+                //bit shift the index of the layer (8) and (9) to get two bit masks
+                int layerMask0 = 1 << 12;
 				int layerMask1 = 1 << 8;
                 int layerMask2 = 1 << 9;
                 int layerMask3 = 1 << 10;
@@ -67,7 +68,8 @@ public class WorldDecomposer : MonoBehaviour {
                 //this would cast rays only against colliders in layer 8 or against layer 9.
                 //but instead we want to collide against everything except layer 8 and layer 9. The ~ operator does this, it inverts a bitmasks.
                 //int layerMask4 = ~(layerMask1 | layerMask2 | layerMask3);
-                int layerMask4 = ~(layerMask1 | layerMask2 | layerMask3);
+                int layerMask4 = ~(layerMask1 | layerMask2 | layerMask3 | layerMask0);
+                int layerMask5 = (layerMask1 | layerMask2 | layerMask3);
 
                 //does the ray intersect any objects not on the Ground, Player, or AI layer
                 if (Physics.Raycast(startPos, Vector3.down, out hit, Mathf.Infinity, layerMask4))
@@ -76,12 +78,18 @@ public class WorldDecomposer : MonoBehaviour {
 					//Debug.DrawRay (startPos, Vector3.down * 20, Color.red, 50000);
 					worldData [row, col] = 1;
 				}
-                else if (Physics.Raycast(startPos, Vector3.down, out hit, Mathf.Infinity, ~layerMask4))
+                else if (Physics.Raycast(startPos, Vector3.down, out hit, Mathf.Infinity, layerMask5))
                 {
                     //else if it intersects with Ground, Player or AI layer
 					Debug.DrawRay (startPos, Vector3.down * 20, Color.green, 50000);
 					worldData [row, col] = 0;
 				}
+                else if (Physics.Raycast(startPos, Vector3.down, out hit, Mathf.Infinity, layerMask0))
+                {
+                    //print("Hit something at row: " + row + " col: " + col);
+                    //Debug.DrawRay (startPos, Vector3.down * 20, Color.red, 50000);
+                    worldData[row, col] = 1;
+                }
                 else
                 {
                     //else it hits nothing
@@ -109,5 +117,10 @@ public class WorldDecomposer : MonoBehaviour {
     public int GetCols()
     {
         return cols;
+    }
+
+    public float GetNodeSize()
+    {
+        return nodeSize;
     }
 }

@@ -1,10 +1,10 @@
 ﻿<Properties StartupConfiguration="{B2B58FB2-4462-6B0C-A872-40DD957E5FE0}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Walker/Scripts/CameraControl2.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Rockford/Scripts/waypoint_Cache.cs">
     <Files>
-      <File FileName="Assets/Walker/Scripts/CameraControl2.cs" Line="41" Column="39" />
-      <File FileName="Assets/Walker/Scripts/emptyObjectFollow2.cs" Line="5" Column="32" />
-      <File FileName="Assets/Walker/Scripts/RollMovement2.cs" Line="5" Column="27" />
+      <File FileName="Assets/Rockford/Scripts/AI Scripts/AIMovement.cs" Line="62" Column="10" />
+      <File FileName="Assets/Rockford/Scripts/AI Scripts/AStarSearch.cs" Line="1" Column="1" />
+      <File FileName="Assets/Rockford/Scripts/waypoint_Cache.cs" Line="5" Column="35" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
